@@ -8,42 +8,25 @@ const items = [];
 const itemNames = ['Aged Brie', 'Backstage passes to a TAFKAL80ETC concert', 'Sulfuras, Hand of Ragnaros', 'Conjured Mana Cake'];
 
 const degrades = (quality, value = 1) => {
-  let valueUpdated;
-  if(quality > 0) valueUpdated = quality - value;
-  if(valueUpdated < 0) valueUpdated = 0;
-  return valueUpdated;
+  return (quality - value > 0)? quality - value : 0;
 };
 
 const increases = (quality, value = 1) => {
-  let valueUpdated;
-  if(quality < 50) valueUpdated = quality + value;
-  if(valueUpdated > 50) valueUpdated = 50;
-  return valueUpdated;
+  return (quality + value < 50)? quality + value : 50;
 };
 
 const update_quality = () => {
   items.forEach((item) => {
-    if(item.name === itemNames[2]) {
-      item.sell_in -= 1;
-      return item;
-    }
 
-    if(item.name === itemNames[3]) {
-      item.sell_in -= 1;
-      return item.quality = degrades(item.quality, 2);
-    }
-
-    if(item.sell_in <= 0 ) {
-      if(!itemNames.slice(0,2).includes(item.name)) {
-        item.quality = degrades(item.quality, 2);
-      } else {
-        (item.name === itemNames[1]) ? item.quality = 0 : item.quality = increases(item.quality);
-      };
-    } else {
-      if(item.name === itemNames[0]) {
+    switch(item.name) {
+      case itemNames[0]:
         item.quality = increases(item.quality);
-      } else if(item.name === itemNames[1]) {
+        break;
+      case itemNames[1]:
         switch(true) {
+          case (item.sell_in <= 0):
+            item.quality = 0;
+            break;
           case (item.sell_in <= 5):
             item.quality = increases(item.quality, 3);
             break;
@@ -53,10 +36,16 @@ const update_quality = () => {
           default:
             item.quality = increases(item.quality);
         }
-      } else {
-        item.quality = degrades(item.quality);
-      }
-    };
+        break;
+      case itemNames[2]:
+        item;
+        break;
+      case itemNames[3]:
+        item.quality = degrades(item.quality, 2);
+        break;
+      default:
+        item.quality = (item.sell_in <= 0)? degrades(item.quality, 2) : degrades(item.quality);
+    }
 
     item.sell_in -= 1;
   });
