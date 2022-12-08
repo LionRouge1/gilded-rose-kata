@@ -4,52 +4,60 @@ function Item(name, sell_in, quality) {
   this.quality = quality;
 }
 
-var items = []
+const items = [];
+const itemNames = ['Aged Brie', 'Backstage passes to a TAFKAL80ETC concert', 'Sulfuras, Hand of Ragnaros', 'Conjured Mana Cake'];
 
-function update_quality() {
-  for (var i = 0; i < items.length; i++) {
-    if (items[i].name != 'Aged Brie' && items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-      if (items[i].quality > 0) {
-        if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-          items[i].quality = items[i].quality - 1
-        }
-      }
+const degrades = (quality, value = 1) => {
+  let valueUpdated;
+  if(quality > 0) valueUpdated = quality - value;
+  if(valueUpdated < 0) valueUpdated = 0;
+  return valueUpdated;
+};
+
+const increases = (quality, value = 1) => {
+  let valueUpdated;
+  if(quality < 50) valueUpdated = quality + value;
+  if(valueUpdated > 50) valueUpdated = 50;
+  return valueUpdated;
+};
+
+const update_quality = () => {
+  items.forEach((item) => {
+    if(item.name === itemNames[2]) {
+      item.sell_in -= 1;
+      return item;
+    }
+
+    if(item.name === itemNames[3]) {
+      item.sell_in -= 1;
+      return item.quality = degrades(item.quality, 2);
+    }
+
+    if(item.sell_in <= 0 ) {
+      if(!itemNames.slice(0,2).includes(item.name)) {
+        item.quality = degrades(item.quality, 2);
+      } else {
+        (item.name === itemNames[1]) ? item.quality = 0 : item.quality = increases(item.quality);
+      };
     } else {
-      if (items[i].quality < 50) {
-        items[i].quality = items[i].quality + 1
-        if (items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].sell_in < 11) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-          if (items[i].sell_in < 6) {
-            if (items[i].quality < 50) {
-              items[i].quality = items[i].quality + 1
-            }
-          }
-        }
-      }
-    }
-    if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-      items[i].sell_in = items[i].sell_in - 1;
-    }
-    if (items[i].sell_in < 0) {
-      if (items[i].name != 'Aged Brie') {
-        if (items[i].name != 'Backstage passes to a TAFKAL80ETC concert') {
-          if (items[i].quality > 0) {
-            if (items[i].name != 'Sulfuras, Hand of Ragnaros') {
-              items[i].quality = items[i].quality - 1
-            }
-          }
-        } else {
-          items[i].quality = items[i].quality - items[i].quality
+      if(item.name === itemNames[0]) {
+        item.quality = increases(item.quality);
+      } else if(item.name === itemNames[1]) {
+        switch(true) {
+          case (item.sell_in <= 5):
+            item.quality = increases(item.quality, 3);
+            break;
+          case (item.sell_in <= 10):
+            item.quality = increases(item.quality, 2);
+            break;
+          default:
+            item.quality = increases(item.quality);
         }
       } else {
-        if (items[i].quality < 50) {
-          items[i].quality = items[i].quality + 1
-        }
+        item.quality = degrades(item.quality);
       }
-    }
-  }
+    };
+
+    item.sell_in -= 1;
+  });
 }
