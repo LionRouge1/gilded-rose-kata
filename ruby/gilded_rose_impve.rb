@@ -4,6 +4,15 @@ class GildedRose
         @quality_names = ['Aged Brie', 'Backstage passes to a TAFKAL80ETC concert', 'Sulfuras, Hand of Ragnaros', 'Conjured Mana Cake']
     end
 
+    def update_quality
+        @items.each do |item|
+            update_item(item)
+            item.sell_in -= 1 unless item.name === @quality_names[2]
+        end
+    end
+
+    private
+
     def degrades(quality, value = 1)
         (quality - value > 0)? quality - value : 0;
     end
@@ -33,26 +42,5 @@ class GildedRose
         else
             item.quality = (item.sell_in <= 0)? degrades(item.quality, 2) : degrades(item.quality);
         end
-    end
-
-    def update_quality
-        @items.each do |item|
-            update_item(item)
-            item.sell_in -= 1 unless item.name === @quality_names[2]
-        end
-    end
-end
-
-class Item
-    attr_accessor :name, :sell_in, :quality
-  
-    def initialize(name, sell_in, quality)
-      @name = name
-      @sell_in = sell_in
-      @quality = quality
-    end
-  
-    def to_s()
-      "#{@name}, #{@sell_in}, #{@quality}"
     end
 end
