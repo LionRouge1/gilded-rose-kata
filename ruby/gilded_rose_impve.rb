@@ -1,6 +1,7 @@
 class GildedRose
     def initialize(items)
         @items = items
+        @value = 1
         @quality_names = ['Aged Brie', 'Backstage passes to a TAFKAL80ETC concert', 'Sulfuras, Hand of Ragnaros', 'Conjured Mana Cake']
     end
 
@@ -14,11 +15,13 @@ class GildedRose
     private
 
     def degrades(quality, value = 1)
-        (quality - value > 0)? quality - value : 0;
+        degrade = quality - value * @value
+        (degrade > 0)? degrade : 0;
     end
 
     def increases(quality, value = 1)
-        (quality + value < 50)? quality + value : 50;
+        increase = quality + value * @value
+        (increase < 50)? increase : 50;
     end
 
     def update_item(item)

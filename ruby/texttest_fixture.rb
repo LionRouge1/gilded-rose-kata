@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 
-require_relative 'gilded_rose_impve.rb'
-require_relative 'item.rb'
+ require_relative 'gilded_rose_impve.rb'
+ require_relative 'item.rb'
 # require File.join(File.dirname(__FILE__), 'gilded_rose')
 
 puts "OMGHAI!"

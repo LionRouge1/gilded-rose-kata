@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'gilded_rose')
+require File.join(File.dirname(__FILE__), 'gilded_rose_impve')
 
 describe GildedRose do
 
@@ -6,7 +6,7 @@ describe GildedRose do
     it "does not change the name" do
       items = [Item.new("foo", 0, 0)]
       GildedRose.new(items).update_quality()
-      items[0].name.should == "fixme"
+      items[0].name.should == "foo"
     end
   end
 
