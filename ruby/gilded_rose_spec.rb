@@ -1,4 +1,5 @@
-require File.join(File.dirname(__FILE__), 'gilded_rose')
+require File.join(File.dirname(__FILE__), 'gilded_rose_impve')
+require_relative 'item'
 
 describe GildedRose do
 
@@ -6,7 +7,7 @@ describe GildedRose do
     it "does not change the name" do
       items = [Item.new("foo", 0, 0)]
       GildedRose.new(items).update_quality()
-      items[0].name.should == "foo"
+      expect(items[0].name).to eq("foo")
     end
 
     it 'Quality should decreses' do
@@ -36,6 +37,29 @@ describe GildedRose do
         GildedRose.new(items).update_quality
         expect(items[0].sell_in).to eq(2)
         expect(items[0].quality).to eq(5)
+      end
+    end
+
+    describe 'Backstage passes to a TAFKAL80ETC concert' do
+      it 'increase by 2 when sell_in is <= 10 ' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 10, 47)]
+        GildedRose.new(items).update_quality
+        expect(items[0].sell_in).to eq(9)
+        expect(items[0].quality).to eq(49)
+      end
+
+      it 'increase by 3 when sell_in is <= 5 ' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 4, 47)]
+        GildedRose.new(items).update_quality
+        expect(items[0].sell_in).to eq(3)
+        expect(items[0].quality).to eq(50)
+      end
+
+      it 'drops to 0 when sell_in is <= 0 ' do
+        items = [Item.new('Backstage passes to a TAFKAL80ETC concert', 0, 47)]
+        GildedRose.new(items).update_quality
+        expect(items[0].sell_in).to eq(-1)
+        expect(items[0].quality).to eq(0)
       end
     end
 
